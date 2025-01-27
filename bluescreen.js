@@ -91,9 +91,9 @@ async function init() {
     // Update the vertex buffer to include fishVertices
     var allVertices = new Float32Array([
       // Original triangle
-      //0, 0.5,
-      //-0.5, 0,
-     //0.5, 0,
+      0, 0.5,
+      -0.5, 0,
+      0.5, 0,
 
       // Fish shape vertices
       ...fishVertices,
