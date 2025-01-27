@@ -65,12 +65,38 @@ async function init() {
       code: vertCode + '\n' + fragCode,
     });
 
-    // Create a triangle geometry in CPU
-    var vertices = new Float32Array([
-      // x, y
+        // Add fish shape vertices
+    var fishVertices = new Float32Array([
+      // Body (triangle)
       0, 0.5,
       -0.5, 0,
-      0.5,  0,
+      0.5, 0,
+
+      // Tail (triangle)
+      -0.5, 0.1,
+      -0.7, 0.2,
+      -0.7, 0,
+
+      // Top Fin (triangle)
+      0, 0.5,
+      -0.1, 0.7,
+      0.1, 0.7,
+
+      // Bottom Fin (triangle)
+      0, 0,
+      -0.1, -0.2,
+      0.1, -0.2,
+    ]);
+
+    // Update the vertex buffer to include fishVertices
+    var allVertices = new Float32Array([
+      // Original triangle
+      //0, 0.5,
+      //-0.5, 0,
+     //0.5, 0,
+
+      // Fish shape vertices
+      ...fishVertices,
     ]);
 
     // Create vertex buffer to store the vertices in GPU
