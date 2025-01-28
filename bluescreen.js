@@ -59,41 +59,61 @@ async function init() {
     }
     `;
 
+    var fragCodeRed = `
+    @fragment
+    fn fragmentMain() -> @location(0) vec4f {
+        return vec4f(1.0, 0.0, 0.0, 1.0); // Red
+    }
+    `;
+
+    var fragCodeBlue = `
+    @fragment
+    fn fragmentMain() -> @location(0) vec4f {
+        return vec4f(0.0, 0.0, 1.0, 1.0); // Blue
+    }
+    `;
+
     // Create shader module
     var shaderModule = device.createShaderModule({
       label: "Shader",
       code: vertCode + '\n' + fragCode,
     });
 
+    var shaderModuleRed = device.createShaderModule({
+      label: "Red Shader",
+      code: vertCode + '\n' + fragCodeRed,
+    });
+  
+    var shaderModuleBlue = device.createShaderModule({
+      label: "Blue Shader",
+      code: vertCode + '\n' + fragCodeBlue,
+    });
+
         // Add fish shape vertices
     var fishVertices = new Float32Array([
-      // Body (triangle)
+      // Body upper half (triangle)
       0, 0.5,
-      -0.5, 0,
-      0.5, 0,
+      -0.5, .1,
+      0.5, 0.1,
+
+      // Body lower half
+      0, -0.25,
+      -0.5, 0.1,
+      0.5, 0.1,
 
       // Tail (triangle)
       -0.5, 0.1,
       -0.7, 0.2,
       -0.7, 0,
 
-      // Top Fin (triangle)
-      0, 0.5,
-      -0.1, 0.7,
-      0.1, 0.7,
-
-      // Bottom Fin (triangle)
-      0, 0,
-      -0.1, -0.2,
-      0.1, -0.2,
     ]);
 
     // Update the vertex buffer to include fishVertices
-    var allVertices = new Float32Array([
+    var vertices = new Float32Array([
       // Original triangle
-      0, 0.5,
-      -0.5, 0,
-      0.5, 0,
+      //0, 0.5,
+      //-0.5, 0,
+      //0.5, 0,
 
       // Fish shape vertices
       ...fishVertices,
@@ -136,6 +156,32 @@ async function init() {
       }
     });
 
+    var renderPipelineRed = device.createRenderPipeline({
+      vertex: {
+          module: shaderModuleRed,
+          entryPoint: "vertexMain",
+          buffers: [vertexBufferLayout],
+      },
+      fragment: {
+          module: shaderModuleRed,
+          entryPoint: "fragmentMain",
+          targets: [{ format: canvasFormat }],
+      },
+    });
+  
+  var renderPipelineBlue = device.createRenderPipeline({
+      vertex: {
+          module: shaderModuleBlue,
+          entryPoint: "vertexMain",
+          buffers: [vertexBufferLayout],
+      },
+      fragment: {
+          module: shaderModuleBlue,
+          entryPoint: "fragmentMain",
+          targets: [{ format: canvasFormat }],
+      },
+    });
+
     
 
     // add more render pass to draw the plane
@@ -143,6 +189,16 @@ async function init() {
     pass.setVertexBuffer(0, vertexBuffer); // which vertex buffer is used at location 0
     pass.draw(vertices.length / 2);        // how many vertices to draw
 
+        // Render red shape
+    pass.setPipeline(renderPipelineRed);
+    pass.setVertexBuffer(0, vertexBuffer);
+    pass.draw(verticesRed.length / 2);
+
+    // Render blue shape
+    pass.setPipeline(renderPipelineBlue);
+    pass.setVertexBuffer(0, vertexBuffer);
+    pass.draw(verticesBlue.length / 2);
+    
     pass.end(); // end the pass
     // Create the command buffer
     const commandBuffer = encoder.finish();
