@@ -1,4 +1,4 @@
-import SceneObject from "/lib/DSViz/SceneObject.js"
+import SceneObject from "/quest1-starter/lib/DSViz/SceneObject.js"
 
 export default class Standard2DVertexColorObject extends SceneObject {
   constructor(device, canvasFormat, vertices) {
