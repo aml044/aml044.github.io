@@ -21,7 +21,7 @@
  *                                anything the license permits.
  */
 
-import SceneObject from "/lib/DSViz/SceneObject.js"
+import SceneObject from "/quest1-starter/lib/DSViz/SceneObject.js"
 
 export default class Standard2DVertexObject extends SceneObject {
   constructor(device, canvasFormat, vertices, vertexShader, fragmentShader) {
