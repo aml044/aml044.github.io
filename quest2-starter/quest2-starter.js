@@ -26,13 +26,13 @@
 // Chrome & Edge 113+ : Enable Vulkan, Default ANGLE Vulkan, Vulkan from ANGLE, Unsafe WebGPU Support, and WebGPU Developer Features (if exsits)
 // Firefox Nightly: sudo snap install firefox --channel=latext/edge or download from https://www.mozilla.org/en-US/firefox/channel/desktop/
 
-import FilteredRenderer from 'quest2-starter/lib/Viz/2DFilteredRenderer.js'
-import Standard2DFullScreenObject from 'quest2-starter/lib/DSViz/Standard2DFullScreenObject.js'
-import Standard2DPGAPosedVertexColorObject from 'quest2-starter/lib/DSViz/Standard2DPGAPosedVertexColorObject.js'
-import Standard2DVertexColorObject from 'quest2-starter/lib/DSViz/Standard2DVertexColorObject.js'
-import LineStrip2DVertexObject from 'quest2-starter/lib/DSViz/LineStrip2DVertexObject.js'
-import DemoTreeObject from 'quest2-starter/lib/DSViz/DemoTreeObject.js'
-import PGA2D from 'quest2-starter/lib/Math/PGA2D.js'
+import FilteredRenderer from '/quest2-starter/lib/Viz/2DFilteredRenderer.js'
+import Standard2DFullScreenObject from '/quest2-starter/lib/DSViz/Standard2DFullScreenObject.js'
+import Standard2DPGAPosedVertexColorObject from '/quest2-starter/lib/DSViz/Standard2DPGAPosedVertexColorObject.js'
+import Standard2DVertexColorObject from '/quest2-starter/lib/DSViz/Standard2DVertexColorObject.js'
+import LineStrip2DVertexObject from '/quest2-starter/lib/DSViz/LineStrip2DVertexObject.js'
+import DemoTreeObject from '/quest2-starter/lib/DSViz/DemoTreeObject.js'
+import PGA2D from '/quest2-starter/lib/Math/PGA2D.js'
 
 async function init() {
   // Create a canvas tag
@@ -43,7 +43,7 @@ async function init() {
   const renderer = new FilteredRenderer(canvasTag);
   await renderer.init();
   // Create a background
-  await renderer.appendSceneObject(new Standard2DFullScreenObject(renderer._device, renderer._canvasFormat, "quest2-starter/assets/cosmos.jpg"));
+  await renderer.appendSceneObject(new Standard2DFullScreenObject(renderer._device, renderer._canvasFormat, "/quest2-starter/assets/cosmos.jpg"));
 
   //SUN
   const keySegments = 30; // Number of segments for the circle
