@@ -1,100 +1,54 @@
 <!DOCTYPE html>
 <html>
-<meta>
-<link rel="stylesheet" type="text/css" href="[the css file]">
-<style>
-html, body {
-     overflow: visible;
-     width: 100%;
-     height: 100%;
-     margin: 0;
-     padding: 0;
-     background-color: #003865;
-     color: #ffffff;
- }
-</style>
-</meta>
 <head>
     <title>[The Enlightenment]</title>
+    <link rel="stylesheet" type="text/css" href="[the css file]">
+    <style>
+        html, body {
+            overflow: visible;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #003865;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
     <h1>[Welcome all to the enlightenment! I hope you all enjoy your time here.]</h1>
     <p>[This portal is for CSCI 379 Computer Graphics Wizard Academy]</p>
-     <button onclick="castSpell()">Click to Cast a Spell!</button>
-     <p id="spellResult"></p>
-     <script>
-     function castSpell() {
-         document.getElementById("spellResult").innerText = "Your spell has been cast successfully!";
-     }
-     </script>
-     <button onclick="Quest1()">Quest 1!</button>
-     <script>
-     function Quest1() {
-          window.location.href = "quest1-starter2-full.html"; // Change to your target page
-     }
-     </script>
-     <button onclick="Quest2()">Quest 2!</button>
-     <script>
-     function Quest2() {
-          window.location.href = "quest2-starter-full.html"; // Change to your target page
-     }
-     </script>
-     <button onclick="Quest3()">Quest 3!</button>
-     <script>
-     function Quest3() {
-          window.location.href = "quest3-starter-full.html"; // Change to your target page
-     }
-     </script>
-     <button onclick="Quest4()">Quest 4!</button>
-     <script>
-     function Quest4() {
-          window.location.href = "quest4-starter-full.html"; // Change to your target page
-     }
-     </script>
-     <button onclick="Quest5()">Quest 5!</button>
-     <script>
-     	function Quest5() {
-          window.location.href = "quest5-starter-full.html"; // Change to your target page
-     	}
-     	</script>
 
-	</script>
-     <button onclick="Quest6()">Quest 6!</button>
-     <script>
-        function Quest6() {
-          window.location.href = "quest6-starter-full.html"; // Change to your target page
+    <button onclick="castSpell()">Click to Cast a Spell!</button>
+    <p id="spellResult"></p>
+
+    <button onclick="Quest1()">Quest 1!</button>
+    <button onclick="Quest2()">Quest 2!</button>
+    <button onclick="Quest3()">Quest 3!</button>
+    <button onclick="Quest4()">Quest 4!</button>
+    <button onclick="Quest5()">Quest 5!</button>
+    <button onclick="Quest6()">Quest 6!</button>
+    <button onclick="Quest7()">Quest 7!</button>
+    <button onclick="Quest8()">Quest 8!</button>
+    <button onclick="Quest10()">Quest 10!</button>
+    <button onclick="randomQuest()">Random Quest!</button>
+
+    <script>
+        function castSpell() {
+            document.getElementById("spellResult").innerText = "Your spell has been cast successfully!";
         }
-        </script>
-	
-	</script>
-     <button onclick="Quest7()">Quest 7!</button>
-     <script>
-        function Quest7() {
-          window.location.href = "quest7-starter-full.html"; // Change to your target page
-        }
-        </script>
 
-	</script>
-     <button onclick="Quest8()">Quest 8!</button>
-     <script>
-        function Quest8() {
-          window.location.href = "quest8-starter-full.html"; // Change to your target page
-        }
-        </script>
+        function Quest1() { window.location.href = "quest1-starter2-full.html"; }
+        function Quest2() { window.location.href = "quest2-starter-full.html"; }
+        function Quest3() { window.location.href = "quest3-starter-full.html"; }
+        function Quest4() { window.location.href = "quest4-starter-full.html"; }
+        function Quest5() { window.location.href = "quest5-starter-full.html"; }
+        function Quest6() { window.location.href = "quest6-starter-full.html"; }
+        function Quest7() { window.location.href = "quest7-starter-full.html"; }
+        function Quest8() { window.location.href = "quest8-starter-full.html"; }
+        function Quest10() { window.location.href = "quest10-starter-full.html"; }
 
-
-	</script>
-     <button onclick="Quest10()">Quest 10!</button>
-     <script>
-        function Quest10() {
-          window.location.href = "quest10-starter-full.html"; // Change to your target page
-        }
-        </script>
-
-	</script>
-	    <button onclick="randomQuest()">Random Quest!</button>
-	<script>
-	function randomQuest() {
+        function randomQuest() {
             const quests = [
                 "quest1-starter2-full.html",
                 "quest2-starter-full.html",
@@ -109,8 +63,7 @@ html, body {
             const randomIndex = Math.floor(Math.random() * quests.length);
             window.location.href = quests[randomIndex];
         }
-	<script>
+    </script>
 </body>
 </html>
-
  
