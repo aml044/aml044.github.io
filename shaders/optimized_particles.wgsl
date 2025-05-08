@@ -30,35 +30,42 @@ struct Particle {
   lifespan: f32, //Current lifespan
   initLifespan: f32 //for respanwing
 }
-
+struct VelConfig {
+  velMode: u32,  
+}
 // TODO 4: Write the bind group spells here using array<Particle>
 // name the binded variables particlesIn and particlesOut
 @group(0) @binding(0) var<storage, read> particlesIn: array<Particle>;
 @group(0) @binding(1) var<storage, read_write> particlesOut: array<Particle>;
+@group(0) @binding(2) var<uniform> velConfig: VelConfig;
 
+struct VertexOut {
+  @builtin(position) pos: vec4f,
+  @location(0) alpha: f32,
+};
 
 @vertex
-fn vertexMain(@builtin(instance_index) idx: u32, @builtin(vertex_index) vIdx: u32) -> @builtin(position) vec4f {
-  // TODO 5: Revise the vertex shader to draw circle to visualize the particles
+fn vertexMain(@builtin(instance_index) idx: u32, @builtin(vertex_index) vIdx: u32) -> VertexOut {
   let particle = particlesIn[idx].pos;
-  let lifespanFactor = particlesIn[idx].lifespan / 255.0;
+  let lifespanFactor = particlesIn[idx].lifespan / particlesIn[idx].initLifespan; // normalize lifespan [0,1]
   let baseSize = 0.0125;
   let size = baseSize * lifespanFactor;
 
   let pi = 3.14159265;
-  //compute angle
   let theta = 2. * pi / 8. * f32(vIdx);
   let x = cos(theta) * size;
   let y = sin(theta) * size;
-  
-  return vec4f(vec2f(x + particle[0], y + particle[1]), 0, 1);
+
+  var out: VertexOut;
+  out.pos = vec4f(vec2f(x + particle[0], y + particle[1]), 0, 1);
+  out.alpha = lifespanFactor;
+  return out;
 }
 
 @fragment
-fn fragmentMain() -> @location(0) vec4f {
-  return vec4f(238.f/255, 118.f/255, 35.f/255, 1); // (R, G, B, A)
+fn fragmentMain(@location(0) alpha: f32) -> @location(0) vec4f {
+  return vec4f(238.0 / 255.0, 118.0 / 255.0, 35.0 / 255.0, alpha);
 }
-
 @compute @workgroup_size(256)
 fn computeMain(@builtin(global_invocation_id) global_id: vec3u) {
   // TODO 6: Revise the compute shader to update the particles using the velocity
@@ -79,14 +86,22 @@ fn computeMain(@builtin(global_invocation_id) global_id: vec3u) {
     p.pos += p.vel;
     p.lifespan -= 1.0;
 
-    if (p.lifespan <= 0.0 || p.pos.x < -1.0 || p.pos.x > 1.0 || p.pos.y < -1.0 || p.pos.y > 1.0){
+    if (p.lifespan <= 0.0 || p.pos.x < -1.0 || p.pos.x > 1.0 || p.pos.y < -1.0 || p.pos.y > 1.0) {
       p.pos = p.initPos;
       p.lifespan = p.initLifespan;
 
-      //Assing a new random vel
-      let randX = (f32(idx % 10) / 50.0) - 0.1;
-      let randY = (f32((idx * 2) % 10) / 50.0) - 0.1;
-      p.vel = vec2f(randX, randY);
+      if (velConfig.velMode == 0u) {
+        let randX = (f32(idx % 10) / 50.0) - 0.1;
+        let randY = (f32((idx * 2) % 10) / 50.0) - 0.1;
+        p.vel = vec2f(randX, randY);
+      } else if ( velConfig.velMode == 1u ) {
+        p.vel = vec2f(0.0, 0.0);
+      } else if (velConfig.velMode == 2u) {
+        let angle = atan2(p.pos.y, p.pos.x);
+        let speed = 0.02;
+        let tangent = vec2f(-sin(angle), cos(angle)); // 90° to radial direction
+        p.vel = tangent * speed;
+      }
     }
     particlesOut[idx] = p;
     }
