@@ -90,6 +90,26 @@ html, body {
           window.location.href = "quest10-starter-full.html"; // Change to your target page
         }
         </script>
+
+	</script>
+	    <button onclick="randomQuest()">Random Quest!</button>
+	<script>
+	function randomQuest() {
+            const quests = [
+                "quest1-starter2-full.html",
+                "quest2-starter-full.html",
+                "quest3-starter-full.html",
+                "quest4-starter-full.html",
+                "quest5-starter-full.html",
+                "quest6-starter-full.html",
+                "quest7-starter-full.html",
+                "quest8-starter-full.html",
+                "quest10-starter-full.html"
+            ];
+            const randomIndex = Math.floor(Math.random() * quests.length);
+            window.location.href = quests[randomIndex];
+        }
+	<script>
 </body>
 </html>
 
