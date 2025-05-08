@@ -251,6 +251,7 @@ struct Camera {
   motor: MultiVector,
   focal: vec2f,
   res: vec2f,
+  mode: u32,
 }
 
 // struct to store a quad vertices
@@ -408,53 +409,43 @@ fn assignColor(uv: vec2i, t: f32, idx: i32) {
 
 @compute
 @workgroup_size(16, 16)
-fn computeOrthogonalMain(@builtin(global_invocation_id) global_id: vec3u) {
-  // get the pixel coordiantes
+fn computeMain(@builtin(global_invocation_id) global_id: vec3u) {
   let uv = vec2i(global_id.xy);
   let texDim = vec2i(textureDimensions(outTexture));
-  if (uv.x < texDim.x && uv.y < texDim.y) {
-    // compute the pixel size
+  if (uv.x >= texDim.x || uv.y >= texDim.y) {
+    return;
+  }
+
+  if (cameraPose.mode == 0u) {
     let psize = vec2f(2, 2) / cameraPose.res.xy;
-    // orthogonal camera ray sent from each pixel center at z = 0
-    var spt = vec3f((f32(uv.x) + 0.5) * psize.x - 1, (f32(uv.y) + 0.5) * psize.y - 1, 0);
+    var spt = vec3f((f32(uv.x) + 0.5) * psize.x - 1.0,
+                    (f32(uv.y) + 0.5) * psize.y - 1.0,
+                    0.0);
     var rdir = vec3f(0, 0, 1);
-    // apply transformation
+
     spt = transformPt(spt);
     rdir = transformDir(rdir);
-    // compute the intersection to the object
-    var hitInfo = rayBoxIntersection(spt, rdir);
-    // assign colors
-    assignColor(uv, hitInfo.x, i32(hitInfo.y));
-  }
-}
 
-@compute
-@workgroup_size(16, 16)
-fn computeProjectiveMain(@builtin(global_invocation_id) global_id: vec3u) {
-  let uv = vec2i(global_id.xy);
-  let texDim = vec2i(textureDimensions(outTexture));
-  if (uv.x < texDim.x && uv.y < texDim.y) {
+    let hitInfo = rayBoxIntersection(spt, rdir);
+    assignColor(uv, hitInfo.x, i32(hitInfo.y));
+  } else {
     let px = (f32(uv.x) / cameraPose.res.x - 0.5) * 2.0;
     let py = (0.5 - f32(uv.y) / cameraPose.res.y) * 2.0;
 
     let fx = cameraPose.focal.x;
     let fy = cameraPose.focal.y;
 
-    var rdir = normalize(vec3f(px * fx, py * fy, -1.0)); // z = -1 for pinhole
+    var rdir = normalize(vec3f(px * fx, py * fy, -1.0));
 
-    var spt = applyMotorToPoint(vec3f(0, 0, 0), cameraPose.motor); // camera origin
-    rdir = applyMotorToDir(rdir, cameraPose.motor); // rotate to world dir
+    var spt = applyMotorToPoint(vec3f(0, 0, 0), cameraPose.motor);
+    var worldDir = applyMotorToDir(rdir, cameraPose.motor);
 
-    // Transform ray into object space
     spt = applyMotorToPoint(spt, reverse(box.motor));
-    rdir = applyMotorToDir(rdir, reverse(box.motor));
+    worldDir = applyMotorToDir(worldDir, reverse(box.motor));
     spt /= box.scale.xyz;
-    rdir /= box.scale.xyz;
+    worldDir /= box.scale.xyz;
 
-    // Intersectoin
-    var hitInfo = rayBoxIntersection(spt, rdir);
-
-    // Assign color
+    let hitInfo = rayBoxIntersection(spt, worldDir);
     assignColor(uv, hitInfo.x, i32(hitInfo.y));
   }
 }
